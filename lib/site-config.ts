@@ -37,10 +37,18 @@ export const SITE_CONFIG = {
   twitterHandle: '@embedone',
 } as const
 
+export const RELEASES_URL = "https://github.com/EmbedOne/embedone-web/releases"
+export const RELEASE_NOTES_URL = `${RELEASES_URL}/tag/v1.0.0`
+
 export const DOWNLOADS = {
-  // Paste the release URL into each url field to enable installers.
+  // An empty url renders the button as "Coming soon". Paste a release asset URL to enable it.
   linux: { label: "Download for Linux", url: "", version: "", fileType: ".deb / .AppImage" },
-  windows: { label: "Download for Windows", url: "", version: "", fileType: ".exe installer" },
+  windows: {
+    label: "Download for Windows",
+    url: `${RELEASES_URL}/download/v1.0.0/EmbedOne-1.0.0-Setup-x64.exe`,
+    version: "1.0.0",
+    fileType: ".exe installer",
+  },
 } as const
 
 export const CONTACT_URL = "#"

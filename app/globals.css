@@ -648,6 +648,9 @@ a { text-decoration: none; }
 .notify form { display: flex; flex-shrink: 0; }
 .notify input { background: #1e1e1e; border: 1px solid #555555; padding: 8px 10px; color: #eeeeee; flex: 1; }
 .notify button { background: #007acc; padding: 8px 12px; color: #fff; white-space: nowrap; }
+.notify a.notify-link { flex-shrink: 0; background: #007acc; padding: 8px 12px; color: #fff; white-space: nowrap; font-size: 12px; font-weight: 600; }
+.notify a.notify-link:hover { background: #168bd0; }
+.notify a.notify-link:focus-visible { outline: 2px solid #9fdbea; outline-offset: 2px; }
 
 .final-cta { margin-top: 25px; border: 1px solid #23617a; background: #12313c; padding: 28px; }
 .final-cta h2 { margin: 0 0 7px; }
@@ -897,6 +900,7 @@ a { text-decoration: none; }
   .notify form { flex-direction: column; gap: 8px; }
   .notify input { width: 100%; padding: 12px; font-size: 14px; }
   .notify button { width: 100%; padding: 12px; font-size: 14px; text-align: center; }
+  .notify a.notify-link { width: 100%; padding: 12px; font-size: 14px; text-align: center; }
 
   /* ---- Final CTA ---- */
   .final-cta { padding: 20px 16px; }
