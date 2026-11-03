@@ -39,6 +39,8 @@ export const SITE_CONFIG = {
 
 export const RELEASES_URL = "https://github.com/EmbedOne/embedone-web/releases"
 export const RELEASE_NOTES_URL = `${RELEASES_URL}/tag/v1.0.0`
+// Built from handbook/handbook.html by `node handbook/build-pdf.mjs`.
+export const HANDBOOK = { url: "/EmbedOne-Handbook-1.0.0.pdf", pages: 22 } as const
 
 export const DOWNLOADS = {
   // An empty url renders the button as "Coming soon". Paste a release asset URL to enable it.

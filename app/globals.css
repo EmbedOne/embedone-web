@@ -636,6 +636,36 @@ a { text-decoration: none; }
 .steps-row { display: grid; grid-template-columns: repeat(3, 1fr); margin: 20px 0; }
 .steps-row div { display: flex; gap: 12px; border-top: 1px solid #444444; padding: 12px; }
 .steps-row b { color: #569cd6; font: 12px 'JetBrains Mono'; }
+
+/* ---- Guide: what it is and how to use it ---- */
+.guide h3 { font-size: 13px; margin: 30px 0 12px; }
+.guide-intro { display: grid; grid-template-columns: 1.15fr 1fr; gap: 36px; align-items: start; }
+.guide-intro > p { font-size: 16px; line-height: 1.8; color: #aaaaaa; margin: 0; }
+.guide-intro ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.guide-intro li { display: flex; gap: 10px; color: #cccccc; font-size: 13px; line-height: 1.5; }
+.guide-intro li svg { flex-shrink: 0; margin-top: 3px; color: #4ec9b0; }
+.guide-steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; }
+.guide-steps li { display: flex; gap: 12px; border: 1px solid #444444; background: #252526; padding: 14px; }
+.guide-steps b { color: #569cd6; font: 12px 'JetBrains Mono'; padding-top: 1px; }
+.guide-steps div { display: grid; gap: 4px; align-content: start; }
+.guide-steps strong { color: #eeeeee; font-size: 13px; }
+.guide-steps span { color: #999999; font-size: 12px; line-height: 1.55; }
+.guide-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; }
+.guide-cards > div { border: 1px solid #444444; background: #252526; padding: 14px; display: grid; grid-template-columns: auto 1fr; gap: 6px 10px; align-items: center; }
+.guide-cards svg { color: #4ec9b0; }
+.guide-cards b { color: #eeeeee; font-size: 13px; }
+.guide-cards p { grid-column: 1 / -1; margin: 0; color: #999999; font-size: 12px; line-height: 1.55; }
+.handbook { display: flex; align-items: center; gap: 16px; margin-top: 24px; border: 1px solid #1995d1; background: rgba(0, 122, 204, 0.1); padding: 18px; }
+.handbook > svg { flex-shrink: 0; color: #9fdbea; }
+.handbook > div { flex: 1; min-width: 200px; }
+.handbook b { color: #eeeeee; }
+.handbook p { margin: 4px 0 0; color: #aaaaaa; font-size: 12px; line-height: 1.5; }
+.handbook-link { display: inline-flex; align-items: center; gap: 8px; flex-shrink: 0; background: #007acc; border: 1px solid #1995d1; color: #ffffff; padding: 8px 14px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+.handbook-link:hover { background: #168bd0; }
+.handbook-link:focus-visible, .handbook-line a:focus-visible { outline: 2px solid #9fdbea; outline-offset: 2px; }
+.handbook-line { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 14px 0 0; color: #999999; font-size: 12px; }
+.handbook-line svg { color: #9fdbea; }
+.handbook-line a { color: #3fa9e8; text-decoration: underline; text-underline-offset: 3px; }
 .steps-row span { color: #bbbbbb; }
 
 .notify {
@@ -674,6 +704,8 @@ a { text-decoration: none; }
    Responsive — Tablet (≤ 960px)
    ========================================================================= */
 @media (max-width: 960px) {
+  .guide-steps, .guide-cards { grid-template-columns: repeat(2, 1fr); }
+  .guide-intro { grid-template-columns: 1fr; gap: 18px; }
   .hero-grid, .two-col, .architecture {
     grid-template-columns: 1fr;
     gap: 28px;
@@ -894,6 +926,12 @@ a { text-decoration: none; }
   /* ---- Steps ---- */
   .steps-row { grid-template-columns: 1fr; }
   .steps-row div { padding: 10px 0; }
+
+  /* ---- Guide ---- */
+  .guide-intro { grid-template-columns: 1fr; gap: 18px; }
+  .guide-steps, .guide-cards { grid-template-columns: 1fr; }
+  .handbook { flex-direction: column; align-items: stretch; padding: 14px; gap: 12px; }
+  .handbook-link { justify-content: center; padding: 12px; font-size: 14px; }
 
   /* ---- Notify form ---- */
   .notify { flex-direction: column; align-items: stretch; padding: 14px; gap: 12px; }

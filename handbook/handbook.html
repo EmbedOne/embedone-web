@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>EmbedOne IDE Handbook</title>
+<style>
+  @page { size: A4; margin: 18mm 17mm 20mm 17mm; }
+  :root {
+    --ink: #1b1f24; --muted: #5b6470; --rule: #d9dee4; --rule-soft: #eceff2;
+    --blue: #007acc; --blue-deep: #005a96; --blue-soft: #eaf4fb;
+    --code: #f4f6f8; --warn: #9a4b05; --warn-soft: #fff6ea; --ok: #1f7a4d;
+  }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { margin: 0; color: var(--ink); background: #fff;
+         font: 10.4pt/1.55 "Segoe UI", "Helvetica Neue", Arial, sans-serif; }
+
+  /* cover */
+  .cover { height: 247mm; display: flex; flex-direction: column; break-after: page; }
+  .cover .band { height: 6mm; background: var(--blue); }
+  .cover .mark { margin-top: 52mm; font: 600 11pt "Segoe UI", sans-serif; letter-spacing: .16em;
+                 text-transform: uppercase; color: var(--blue); }
+  .cover h1 { font-size: 40pt; line-height: 1.05; margin: 6mm 0 0; letter-spacing: -.02em; font-weight: 600; }
+  .cover .sub { font-size: 14pt; color: var(--muted); margin-top: 5mm; max-width: 130mm; }
+  .cover .meta { margin-top: auto; border-top: 1.5pt solid var(--ink); padding-top: 4mm;
+                 display: flex; gap: 14mm; font-size: 10pt; }
+  .cover .meta b { display: block; font-size: 8pt; letter-spacing: .12em; text-transform: uppercase;
+                   color: var(--muted); font-weight: 600; margin-bottom: 1mm; }
+
+  /* contents */
+  .toc { break-after: page; }
+  .toc h2 { border: 0; }
+  .toc ol { list-style: none; padding: 0; margin: 0; columns: 1; }
+  .toc li { display: flex; gap: 4mm; padding: 2.2mm 0; border-bottom: .6pt solid var(--rule-soft); }
+  .toc li span { color: var(--blue); font-weight: 600; min-width: 8mm; font-variant-numeric: tabular-nums; }
+  .toc a { color: var(--ink); text-decoration: none; }
+  .toc small { color: var(--muted); margin-left: auto; text-align: right; }
+
+  /* headings */
+  h2 { font-size: 19pt; font-weight: 600; color: var(--ink); margin: 0 0 4mm; padding-bottom: 2.5mm;
+       border-bottom: 1.5pt solid var(--blue); letter-spacing: -.01em; break-after: avoid; }
+  h2 .n { color: var(--blue); margin-right: 3mm; }
+  h3 { font-size: 12pt; font-weight: 600; margin: 6mm 0 2mm; break-after: avoid; }
+  h4 { font-size: 10.5pt; font-weight: 600; margin: 4mm 0 1.5mm; break-after: avoid; }
+  .chapter { break-before: page; }
+  .chapter.first { break-before: auto; }
+  p { margin: 0 0 2.6mm; orphans: 3; widows: 3; }
+  .lede { font-size: 11.5pt; color: #2c333b; }
+  a { color: var(--blue-deep); }
+  ul, ol { margin: 0 0 3mm; padding-left: 6mm; }
+  li { margin-bottom: 1.2mm; }
+
+  /* steps */
+  .steps { list-style: none; padding: 0; counter-reset: s; margin: 3mm 0 4mm; }
+  .steps > li { counter-increment: s; position: relative; padding: 0 0 3mm 11mm; margin: 0;
+                break-inside: avoid; }
+  .steps > li::before { content: counter(s); position: absolute; left: 0; top: .2mm; width: 7mm; height: 7mm;
+                        border-radius: 50%; background: var(--blue); color: #fff; font-weight: 600;
+                        font-size: 9.5pt; display: flex; align-items: center; justify-content: center; }
+  .steps > li > b:first-child { display: block; margin-bottom: .6mm; }
+
+  /* tables */
+  table { width: 100%; border-collapse: collapse; margin: 2mm 0 4mm; font-size: 9.4pt; line-height: 1.42; }
+  thead { display: table-header-group; }
+  tr { break-inside: avoid; }
+  th { text-align: left; font-weight: 600; background: var(--blue-soft); color: var(--blue-deep);
+       padding: 1.8mm 2.4mm; border-bottom: .8pt solid var(--rule); }
+  td { padding: 1.7mm 2.4mm; border-bottom: .5pt solid var(--rule-soft); vertical-align: top; }
+  td.k, th.k { white-space: nowrap; }
+  .group td { background: #f7f9fb; font-weight: 600; color: var(--muted); font-size: 8.4pt;
+              letter-spacing: .06em; text-transform: uppercase; }
+
+  /* code */
+  code, kbd { font-family: Consolas, "Courier New", monospace; font-size: .9em; }
+  code { background: var(--code); border-radius: 2pt; padding: .2mm 1mm; }
+  kbd { border: .6pt solid #b9c1ca; border-bottom-width: 1.2pt; border-radius: 2pt; padding: 0 1.2mm;
+        background: #fff; white-space: nowrap; }
+  pre { background: var(--code); border-left: 2pt solid var(--blue); border-radius: 2pt; padding: 3mm 3.6mm;
+        font: 8.8pt/1.45 Consolas, "Courier New", monospace; white-space: pre-wrap; margin: 2mm 0 4mm;
+        break-inside: avoid; }
+  pre code { background: none; padding: 0; font-size: inherit; }
+
+  /* callouts */
+  .note, .warn, .tip { border-radius: 2pt; padding: 2.8mm 3.6mm; margin: 3mm 0 4mm; break-inside: avoid; }
+  .note { background: var(--blue-soft); border-left: 2pt solid var(--blue); }
+  .warn { background: var(--warn-soft); border-left: 2pt solid #d97706; }
+  .tip  { background: #eef8f2; border-left: 2pt solid var(--ok); }
+  .note > b:first-child, .warn > b:first-child, .tip > b:first-child { display: block; margin-bottom: .6mm; }
+  .warn > b:first-child { color: var(--warn); }
+
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 5mm; }
+  .card { border: .7pt solid var(--rule); border-radius: 2pt; padding: 3mm 3.6mm; break-inside: avoid; }
+  .card h4 { margin-top: 0; }
+  .yes { color: var(--ok); font-weight: 600; }
+  .muted { color: var(--muted); }
+</style>
+</head>
+<body>
+
+<section class="cover">
+  <div class="band"></div>
+  <div class="mark">EmbedOne</div>
+  <h1>EmbedOne IDE<br>Handbook</h1>
+  <div class="sub">Install it, pick a board, and build, flash, monitor and debug from one window.</div>
+  <div class="meta">
+    <div><b>Version</b>1.0.0</div>
+    <div><b>Platform</b>Windows 10 and 11, x64</div>
+    <div><b>Published</b>November 2026</div>
+  </div>
+</section>
+
+<section class="toc">
+  <h2>Contents</h2>
+  <ol>
+    <li><span>1</span><a href="#what">What EmbedOne is</a><small>Start here</small></li>
+    <li><span>2</span><a href="#install">Installing EmbedOne</a><small>Download, verify, first launch</small></li>
+    <li><span>3</span><a href="#tour">A tour of the window</a><small>Workspace Home and shortcuts</small></li>
+    <li><span>4</span><a href="#first">Your first project: an STM32 Nucleo</a><small>Build, flash, monitor, debug</small></li>
+    <li><span>5</span><a href="#arduino">ESP32 and Raspberry Pi Pico</a><small>Arduino-based boards</small></li>
+    <li><span>6</span><a href="#linux">Linux boards: Raspberry Pi and NXP i.MX</a><small>Build and run over SSH</small></li>
+    <li><span>7</span><a href="#console">The serial console</a><small></small></li>
+    <li><span>8</span><a href="#catalog">Adding more boards</a><small>Board discovery</small></li>
+    <li><span>9</span><a href="#cli">The command line</a><small>Every command</small></li>
+    <li><span>10</span><a href="#project">The project file</a><small><code>embedone.json</code></small></li>
+    <li><span>11</span><a href="#storage">Files, folders and settings</a><small></small></li>
+    <li><span>12</span><a href="#trouble">Troubleshooting</a><small></small></li>
+    <li><span>13</span><a href="#uninstall">Updating and uninstalling</a><small></small></li>
+    <li><span>14</span><a href="#limits">Known limitations in 1.0.0</a><small></small></li>
+    <li><span>A</span><a href="#boards">Supported boards</a><small>All 33</small></li>
+  </ol>
+</section>
+
+<!-- 1 -->
+<section class="chapter first" id="what">
+  <h2><span class="n">1</span>What EmbedOne is</h2>
+  <p class="lede">EmbedOne is a desktop IDE for embedded development. You choose a board; EmbedOne fetches the exact compiler, build tools and chip support files that board needs, and then lets you build, flash, watch serial output and debug from one window.</p>
+  <p>Embedded work usually means a different vendor IDE, flashing tool and serial monitor for each family of chip, plus an afternoon spent installing toolchains and fixing paths. EmbedOne replaces that with one workflow that looks the same whether the target is an STM32 microcontroller, an ESP32, a Raspberry Pi Pico, or a Linux board such as a Raspberry Pi 5 or an NXP i.MX 8.</p>
+
+  <h3>What it does for you</h3>
+  <table>
+    <thead><tr><th>Step</th><th>What EmbedOne does</th></tr></thead>
+    <tbody>
+      <tr><td class="k"><b>Set up</b></td><td><b>Doctor</b> checks what your board needs and <b>Install</b> downloads it: compilers, CMake, Ninja and the chip's support files. Every download is checksum-verified and kept in EmbedOne's own folder, so other tools on your PC are left alone.</td></tr>
+      <tr><td class="k"><b>Build</b></td><td>Compiles your project and shows how much of the chip's flash and RAM it uses.</td></tr>
+      <tr><td class="k"><b>Flash</b></td><td>Puts the firmware on the board. On STM32 boards it first reads the chip's identity and refuses to write if it isn't the chip your project targets, then reads the flash back to verify it.</td></tr>
+      <tr><td class="k"><b>Monitor</b></td><td>Opens a serial console you can read and type into.</td></tr>
+      <tr><td class="k"><b>Debug</b></td><td>Breakpoints, stepping, variables and the chip's peripheral registers, on STM32 boards.</td></tr>
+    </tbody>
+  </table>
+  <p>Everything the app does is also available as the <code>embedone</code> command, so the same steps can be scripted from PowerShell or a build server (chapter 9).</p>
+
+  <h3>What's in version 1.0.0</h3>
+  <table>
+    <thead><tr><th>Family</th><th>Boards</th><th>Build</th><th>Flash</th><th>Monitor</th><th>Debug</th></tr></thead>
+    <tbody>
+      <tr><td>STM32 Nucleo</td><td>3</td><td class="yes">Yes</td><td class="yes">Yes</td><td class="yes">Yes</td><td class="yes">Yes</td></tr>
+      <tr><td>ESP32 (Arduino)</td><td>1</td><td class="yes">Yes</td><td class="yes">Yes</td><td class="yes">Yes</td><td class="muted">No</td></tr>
+      <tr><td>Raspberry Pi Pico family (Arduino)</td><td>4</td><td class="yes">Yes</td><td class="yes">Yes</td><td class="yes">Yes</td><td class="muted">No</td></tr>
+      <tr><td>Raspberry Pi Linux boards</td><td>10</td><td class="yes">Yes, on the board</td><td class="yes">Deploys the app</td><td class="yes">Runs the app</td><td class="muted">No</td></tr>
+      <tr><td>NXP i.MX Linux boards</td><td>15</td><td class="yes">Yes, on the board</td><td class="yes">Deploys the app</td><td class="yes">Runs the app</td><td class="muted">No</td></tr>
+    </tbody>
+  </table>
+  <p>You can also add more Arduino boards yourself (chapter 8). The full list is in appendix A.</p>
+</section>
+
+<!-- 2 -->
+<section class="chapter" id="install">
+  <h2><span class="n">2</span>Installing EmbedOne</h2>
+
+  <h3>What you need</h3>
+  <ul>
+    <li>Windows 10 or 11, 64-bit.</li>
+    <li>About 470 MB of disk space for the application.</li>
+    <li>An internet connection and several GB of free space the first time you set up a board, for its compiler and support files. These are downloaded only for the boards you use.</li>
+    <li>No administrator rights. EmbedOne installs for your user account only.</li>
+  </ul>
+
+  <h3>Install</h3>
+  <ol class="steps">
+    <li><b>Download the installer</b><code>EmbedOne-1.0.0-Setup-x64.exe</code> from the EmbedOne website or <a href="https://github.com/EmbedOne/embedone-web/releases">github.com/EmbedOne/embedone-web/releases</a>.</li>
+    <li><b>Check it (recommended)</b>In PowerShell, run <code>Get-FileHash .\EmbedOne-1.0.0-Setup-x64.exe</code> and compare the result with the SHA-256 published on the release page.</li>
+    <li><b>Run it</b>The installer isn't code-signed yet, so Windows SmartScreen will say <i>"Windows protected your PC"</i>. Choose <b>More info</b>, then <b>Run anyway</b>.</li>
+    <li><b>Choose your options</b>EmbedOne installs into <code>%LOCALAPPDATA%\Programs\EmbedOne</code> and adds a Start menu shortcut. A desktop shortcut is optional. The installer also adds the <code>embedone</code> command to your user PATH.</li>
+  </ol>
+
+  <h3>First launch</h3>
+  <p>Open <b>EmbedOne</b> from the Start menu. Three things may happen the first time, and all of them are expected:</p>
+  <div class="note"><b>Windows Firewall asks about "VSCodium"</b>EmbedOne is built on VSCodium, the open-source build of the VS Code editor, and some Windows dialogs still use that name. EmbedOne doesn't need incoming connections, so choosing <b>Cancel</b> is fine.</div>
+  <div class="note"><b>"Do you trust the authors of the files in this folder?"</b>The editor asks this the first time you open a workspace. Trust folders you created yourself; EmbedOne needs trust to run builds.</div>
+  <div class="note"><b>Workspace Home opens</b>This is EmbedOne's dashboard, described in the next chapter. A short Getting Started walkthrough is also available from it.</div>
+</section>
+
+<!-- 3 -->
+<section class="chapter" id="tour">
+  <h2><span class="n">3</span>A tour of the window</h2>
+  <p>EmbedOne opens on <b>Workspace Home</b>, a dashboard rather than a sidebar full of panels. It lists your recent workspaces, the projects in the current one, and every board you can target.</p>
+
+  <h3>Workspaces and projects</h3>
+  <p>A <b>project</b> is one program for one board: a folder with an <code>embedone.json</code> file and your source code. A <b>workspace</b> groups several projects, for example the firmware for a sensor board and the Linux application that reads from it. Each project builds on its own; the workspace just keeps them together.</p>
+
+  <h3>The title bar</h3>
+  <p>While you edit, the title bar keeps the controls you use most: <b>Home</b>, <b>Open file</b>, <b>Build</b>, <b>Flash</b>, <b>Terminal</b> and <b>Studio tools</b>. Studio tools gathers everything else: file switching, search across the workspace, output, debug controls, settings and the full command list.</p>
+
+  <h3>Keyboard shortcuts</h3>
+  <table>
+    <thead><tr><th class="k">Keys</th><th>Action</th></tr></thead>
+    <tbody>
+      <tr><td class="k"><kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>H</kbd></td><td>Return to Workspace Home</td></tr>
+      <tr><td class="k"><kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>Space</kbd></td><td>Open Studio tools</td></tr>
+      <tr><td class="k"><kbd>Ctrl</kbd>+<kbd>P</kbd></td><td>Open a file by name</td></tr>
+      <tr><td class="k"><kbd>Ctrl</kbd>+<kbd>Tab</kbd></td><td>Switch between open files</td></tr>
+      <tr><td class="k"><kbd>Ctrl</kbd>+<kbd>S</kbd> / <kbd>Ctrl</kbd>+<kbd>W</kbd></td><td>Save / close the current file</td></tr>
+      <tr><td class="k"><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>B</kbd></td><td>Build the active project</td></tr>
+      <tr><td class="k"><kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>F</kbd></td><td>Flash (or deploy, on Linux boards)</td></tr>
+      <tr><td class="k"><kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>M</kbd></td><td>Open the serial console (or run the app, on Linux boards)</td></tr>
+      <tr><td class="k"><kbd>F5</kbd></td><td>Start debugging (STM32 boards)</td></tr>
+    </tbody>
+  </table>
+  <p>Buttons are only enabled when the active project is ready for them. If <b>Flash</b> is greyed out, Doctor will tell you what's missing.</p>
+
+  <div class="tip"><b>Prefer the classic editor layout?</b>Turn off the <code>embedone.studioShell</code> setting. You get the familiar VS Code layout, with EmbedOne's panels in the sidebar: Workspace, Boards, Environment, Project and Devices.</div>
+</section>
+
+<!-- 4 -->
+<section class="chapter" id="first">
+  <h2><span class="n">4</span>Your first project: an STM32 Nucleo</h2>
+  <p>This chapter walks through the whole cycle on a <b>NUCLEO-G071RB</b>. The same steps work for the NUCLEO-F401RE and NUCLEO-C5A3ZG. The starter project prints a greeting and then a counter over the serial port, so you can see that everything works.</p>
+
+  <h3>Create the project</h3>
+  <ol class="steps">
+    <li><b>Create a workspace</b>On Workspace Home choose <b>Create workspace</b>, give it a name, and pick a parent folder. EmbedOne makes a new folder for it and never overwrites an existing one.</li>
+    <li><b>Add the board</b>Choose <b>MCU</b>, search for <i>G071</i>, select <b>NUCLEO-G071RB</b> and name the project. Its starter code is created beside the workspace file.</li>
+    <li><b>Select the project card</b>This makes it the active project. Build, Flash, Monitor and Debug now act on it.</li>
+  </ol>
+
+  <h3>Set up the tools</h3>
+  <ol class="steps">
+    <li><b>Check setup</b>This runs Doctor, which lists each tool the board needs and whether it's ready.</li>
+    <li><b>Install dependencies</b>EmbedOne downloads the Arm GNU compiler, CMake, Ninja and the STM32G0 support files, verifies each against a pinned checksum, and installs them in its own folder. The first time takes a few minutes; later STM32 projects reuse them.</li>
+    <li><b>Install STM32CubeCLT for flashing and debugging</b>See below. Building works without it.</li>
+  </ol>
+
+  <div class="warn"><b>STM32CubeCLT is a manual step</b>Flashing and debugging STM32 chips needs ST's programmer and GDB server, which come in <b>STM32CubeCLT</b>. ST requires a free myST account and asks you to accept its licence yourself, so EmbedOne can't download it for you.
+    <ol style="margin:2mm 0 0">
+      <li>Go to <a href="https://www.st.com/en/development-tools/stm32cubeclt.html">st.com/en/development-tools/stm32cubeclt.html</a> and sign in.</li>
+      <li>Install the Windows x64 STM32CubeCLT, version 1.22.0 or newer, and follow ST's driver instructions.</li>
+      <li>Restart EmbedOne and run <b>Check setup</b> again.</li>
+      <li>If you installed it somewhere other than <code>C:\ST</code>, set the environment variable <code>EMBEDONE_CUBECLT_ROOT</code> to that folder before starting EmbedOne.</li>
+    </ol>
+  </div>
+
+  <h3>Build</h3>
+  <p>Press <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>B</kbd>. When the build finishes, the project shows how much flash and RAM the firmware uses. If the compiler reports an error, it appears in the Problems list with the file and line.</p>
+
+  <h3>Flash</h3>
+  <p>Connect the Nucleo's USB connector (the one labelled ST-LINK) with a data cable. The board appears under <b>Devices</b>. Press <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>F</kbd>.</p>
+  <p>Before writing anything, EmbedOne reads the chip's device ID through the ST-LINK and compares it with the board your project targets. If you've plugged in a different board, it stops and writes nothing. After writing, it reads the flash back to confirm the firmware arrived intact, then resets the chip.</p>
+
+  <h3>Monitor</h3>
+  <p>Press <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>M</kbd>. A terminal opens on the board's serial port at 115200 baud and the starter firmware's output appears:</p>
+<pre>EmbedOne STM32G0 test
+hello 0
+hello 1
+hello 2</pre>
+  <p>Close the terminal or use <b>Stop Monitor</b> to release the port. Chapter 7 covers the console in more detail.</p>
+
+  <h3>Debug</h3>
+  <p>Press <kbd>F5</kbd>. EmbedOne builds the project if needed, starts the ST-LINK GDB server, loads the firmware and stops at the start of <code>main</code>. From there you can set breakpoints, step through code, inspect variables and browse the chip's peripheral registers. Stopping the debug session also stops the GDB server, so the probe is free for the next flash.</p>
+</section>
+
+<!-- 5 -->
+<section class="chapter" id="arduino">
+  <h2><span class="n">5</span>ESP32 and Raspberry Pi Pico</h2>
+  <p>These boards are programmed as Arduino sketches. EmbedOne installs the Arduino command-line tool, the board's core and its compiler inside its own folder, pinned to tested versions. Your PC's own Arduino installation, if you have one, isn't touched.</p>
+
+  <div class="two">
+    <div class="card">
+      <h4>ESP32 Dev Module</h4>
+      <p>Create the project and run <b>Install dependencies</b>, then build. <b>Flash</b> uploads over the board's USB serial connection and <b>Monitor</b> opens the same port. EmbedOne detects the port automatically; if you have several boards connected, choose one with <code>--port COM7</code> from the command line.</p>
+    </div>
+    <div class="card">
+      <h4>Raspberry Pi Pico, Pico W, Pico 2, Pico 2 W</h4>
+      <p>These use the community Arduino-Pico core. A build produces a <code>.uf2</code> file. For the first flash, <b>hold the BOOTSEL button while plugging in USB</b>; the Pico appears as a drive and EmbedOne copies the firmware onto it. If several Pico drives are connected, name one: <code>embedone flash --port "E:\"</code>.</p>
+    </div>
+  </div>
+
+  <h3>Where the code goes</h3>
+  <p>An Arduino sketch must live in a folder with the same name as its <code>.ino</code> file, so the starter project keeps it at <code>main/main.ino</code>. EmbedOne checks this before building, so a misplaced sketch gets a clear error.</p>
+
+  <h3>Using libraries</h3>
+  <p>List Arduino libraries in the project file with exact versions (chapter 10). Version ranges such as <code>^7.0.0</code> or <code>latest</code> are refused, so your build gives the same result next month as it does today.</p>
+
+  <div class="note"><b>Serial speed</b>An Arduino sketch chooses its own speed in <code>Serial.begin()</code>. The monitor uses the board's usual default; if your sketch uses another speed, pass it with <code>--baud</code>.</div>
+  <div class="note"><b>Why a Pico flash isn't marked "verified"</b>Copying a file to the BOOTSEL drive can't prove that the chip programmed itself correctly or started running. EmbedOne reports exactly what it knows rather than claiming more.</div>
+</section>
+
+<!-- 6 -->
+<section class="chapter" id="linux">
+  <h2><span class="n">6</span>Linux boards: Raspberry Pi and NXP i.MX</h2>
+  <p>On a Linux board, EmbedOne helps you write and run <b>applications</b>. It doesn't install or reflash the operating system: the board must already be running Linux and be reachable over the network.</p>
+
+  <table>
+    <thead><tr><th class="k">Button</th><th>What it does on a Linux board</th></tr></thead>
+    <tbody>
+      <tr><td class="k"><b>Build</b></td><td>Copies your source to the board over SSH and compiles it there with CMake and Ninja. The program comes back to your PC with a checksum.</td></tr>
+      <tr><td class="k"><b>Flash</b></td><td>Deploys the program into your account on the board, at <code>~/.local/share/embedone/apps/&lt;project&gt;/app</code>, and checks the copy. It doesn't touch the OS or reboot the board.</td></tr>
+      <tr><td class="k"><b>Monitor</b></td><td>Runs the program and shows its output. Anything you type goes to its input. <b>Stop</b> ends the program.</td></tr>
+    </tbody>
+  </table>
+  <p>Before every operation EmbedOne checks the board's identity from its device tree, so a project for a Raspberry Pi 5 won't run against a Pi 4 by mistake.</p>
+
+  <h3>Prepare the board</h3>
+  <ol class="steps">
+    <li><b>Install the operating system and enable SSH</b>Raspberry Pi OS for a Raspberry Pi; a matching NXP Linux BSP for an i.MX board.</li>
+    <li><b>Set up key-based SSH login</b>EmbedOne never types passwords. Create an SSH key on your PC and add it to your account on the board.</li>
+    <li><b>Connect once yourself</b>Run <code>ssh your-user@raspberrypi.local</code> in a terminal, check the fingerprint, and accept it. EmbedOne won't accept an unknown board on your behalf.</li>
+    <li><b>Install build tools on the board</b>On Raspberry Pi OS:
+<pre>sudo apt install python3 cmake ninja-build build-essential</pre>
+      An i.MX image needs Python 3.8 or newer, CMake 3.16 or newer, Ninja and a C/C++ compiler. Minimal Yocto images may need these added when the image is built.</li>
+  </ol>
+
+  <h3>Tell EmbedOne where the board is</h3>
+  <p>Open <b>Project settings</b>, or edit the project's <code>embedone.json</code>, and fill in the connection:</p>
+<pre>"settings": {
+  "host": "raspberrypi.local",
+  "user": "your-user",
+  "port": 22
+}</pre>
+  <p>If your key isn't your default SSH key, add <code>"identity_file"</code> with the full path to the key file. Then run <b>Check setup</b>; Doctor confirms the connection, the board model and the build tools.</p>
+
+  <h3>Limits to know</h3>
+  <ul>
+    <li>Your CMake project must produce an executable named <code>app</code>, as the starter project does.</li>
+    <li>Sources can be up to 16 MiB and 4,096 files; symbolic links aren't copied.</li>
+    <li>Shared libraries your program needs must be installed on the board separately.</li>
+    <li>The console is a simple text pipe, not a full terminal, so full-screen programs won't display properly.</li>
+    <li>Debugging isn't available for Linux boards in 1.0.0.</li>
+  </ul>
+</section>
+
+<!-- 7 -->
+<section class="chapter" id="console">
+  <h2><span class="n">7</span>The serial console</h2>
+  <p>Monitor opens a terminal connected to the board. It's interactive: what you type is sent to the board, which is useful for firmware with a command prompt.</p>
+  <table>
+    <thead><tr><th>To</th><th>Do this</th></tr></thead>
+    <tbody>
+      <tr><td>Open it</td><td><kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>M</kbd>, or <b>Monitor</b> on the project</td></tr>
+      <tr><td>Stop it and free the port</td><td>Close the terminal, or run <b>Stop Monitor</b></td></tr>
+      <tr><td>See what you type</td><td>Turn on <code>embedone.monitor.localEcho</code> if your firmware doesn't echo characters back</td></tr>
+      <tr><td>Use a different port or speed</td><td><code>embedone monitor --port COM7 --baud 9600</code></td></tr>
+    </tbody>
+  </table>
+  <p>On STM32 boards the speed comes from the board definition (115200). Only one program can use a serial port at a time, so close other serial tools before opening the console.</p>
+  <div class="warn"><b>A burst of random characters when you first open it?</b>The first time you open the console after plugging in an STM32 Nucleo, it can start with a few lines of garbage before the real output. That's text the ST-LINK received before its serial speed was set. Close the console and open it again; it won't recur until you unplug the board.</div>
+</section>
+
+<!-- 8 -->
+<section class="chapter" id="catalog">
+  <h2><span class="n">8</span>Adding more boards</h2>
+  <p>Beyond the 33 built-in boards, you can add boards from the official <b>Arduino</b> (AVR, megaAVR and SAMD) and <b>Espressif ESP32</b> catalogs. No account or API key is needed.</p>
+  <ol class="steps">
+    <li><b>Find the board</b>On Workspace Home, choose <b>Find another board</b> below the targets, pick a publisher, and search.</li>
+    <li><b>Review and install</b>Select the catalog entry, review its version and checksum, and choose <b>Install and discover boards</b>.</li>
+    <li><b>Select the exact board</b>EmbedOne compiles a small test program for it. Only a successful compile saves the board for future projects.</li>
+  </ol>
+  <p>A compile proves the board's tools work; it doesn't prove that upload, pins or behaviour are right on your hardware. Added boards don't auto-detect their port, so pass <code>--port</code> when flashing and monitoring. Debugging isn't offered for them.</p>
+  <div class="note"><b>Optional: ask a local AI</b><b>Ask local AI</b> can answer questions about a board using an AI model running on your own PC through Ollama. It only gives advice: it never installs anything, and its suggestions are never run. Nothing is sent to the internet.</div>
+</section>
+
+<!-- 9 -->
+<section class="chapter" id="cli">
+  <h2><span class="n">9</span>The command line</h2>
+  <p>The installer puts <code>embedone</code> on your PATH. Open a <b>new</b> PowerShell or Command Prompt window after installing, and run commands from inside a project folder, or point at one with <code>--path</code>. Command names aren't case-sensitive.</p>
+  <table>
+    <thead><tr><th class="k">Command</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td class="k"><code>embedone doctor</code></td><td>Check everything the project needs; <code>--install</code> also installs what's missing</td></tr>
+      <tr><td class="k"><code>embedone install</code></td><td>Install the project's dependencies, or a platform's: <code>embedone install stm32-g0</code></td></tr>
+      <tr><td class="k"><code>embedone build</code></td><td>Build; <code>--clean</code> removes old output first</td></tr>
+      <tr><td class="k"><code>embedone flash</code></td><td>Program and verify the board (deploy, on Linux boards)</td></tr>
+      <tr><td class="k"><code>embedone monitor</code></td><td>Stream serial output until <kbd>Ctrl</kbd>+<kbd>C</kbd>; <code>--port</code>, <code>--baud</code></td></tr>
+      <tr><td class="k"><code>embedone devices</code></td><td>List connected boards and serial ports</td></tr>
+      <tr><td class="k"><code>embedone boards</code></td><td>List supported boards</td></tr>
+      <tr><td class="k"><code>embedone new &lt;board&gt;</code></td><td>Create a starter project: <code>--path</code>, <code>--name</code></td></tr>
+      <tr><td class="k"><code>embedone catalog</code></td><td>Search, prepare and add boards from catalogs (chapter 8)</td></tr>
+      <tr><td class="k"><code>embedone debug</code></td><td>Describe a debug session; press <kbd>F5</kbd> in the editor to debug</td></tr>
+      <tr><td class="k"><code>embedone --help</code></td><td>Full help; <code>embedone --version</code> prints the version</td></tr>
+    </tbody>
+  </table>
+
+  <h3>A complete session</h3>
+<pre>embedone new nucleo-g071rb --path "C:\Projects\Blinky"
+cd "C:\Projects\Blinky"
+embedone doctor --install
+embedone build
+embedone flash
+embedone monitor</pre>
+
+  <h3>For scripts and CI</h3>
+  <p>Most commands accept <code>--json</code> and print one structured result, with <code>success</code> and, on failure, an <code>error</code> that says what went wrong. Scripts should rely on that rather than parsing the human-readable text.</p>
+</section>
+
+<!-- 10 -->
+<section class="chapter" id="project">
+  <h2><span class="n">10</span>The project file</h2>
+  <p>Every project has an <code>embedone.json</code> at its root. EmbedOne finds it by looking in the current folder and its parents, so commands work from any subfolder.</p>
+<pre>{
+  "name": "my-sensor",
+  "modules": [
+    { "id": "main", "type": "stm32", "board": "nucleo-g071rb", "source": "src" }
+  ]
+}</pre>
+  <table>
+    <thead><tr><th class="k">Field</th><th>Meaning</th></tr></thead>
+    <tbody>
+      <tr><td class="k"><code>name</code></td><td>The project's display name</td></tr>
+      <tr><td class="k"><code>type</code></td><td>Which kind of target: <code>stm32</code>, <code>arduino</code> or <code>linux-app</code></td></tr>
+      <tr><td class="k"><code>board</code></td><td>The board ID from appendix A</td></tr>
+      <tr><td class="k"><code>source</code></td><td>The source folder, relative to the project</td></tr>
+      <tr><td class="k"><code>settings</code></td><td>Optional, depends on the type: Arduino libraries, or a Linux board's SSH connection</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Arduino libraries</h3>
+<pre>"settings": {
+  "libraries": [ { "name": "ArduinoJson", "version": "7.0.4" } ]
+}</pre>
+  <p>The board ID selects settings EmbedOne already knows, such as the memory layout or the compiler options, so a project file can never inject its own compiler flags or tool paths. An unknown field inside <code>settings</code> is reported as an error rather than silently ignored.</p>
+</section>
+
+<!-- 11 -->
+<section class="chapter" id="storage">
+  <h2><span class="n">11</span>Files, folders and settings</h2>
+  <table>
+    <thead><tr><th>What</th><th>Where</th></tr></thead>
+    <tbody>
+      <tr><td>The application</td><td><code>%LOCALAPPDATA%\Programs\EmbedOne</code></td></tr>
+      <tr><td>Compilers, SDKs, board catalogs and downloads</td><td><code>%LOCALAPPDATA%\EmbedOne</code>; change with the <code>embedone.home</code> setting or the <code>EMBEDONE_HOME</code> environment variable</td></tr>
+      <tr><td>ST's tools</td><td>Where you installed STM32CubeCLT, normally <code>C:\ST</code>; change with <code>EMBEDONE_CUBECLT_ROOT</code></td></tr>
+      <tr><td>Your projects</td><td>Anywhere you choose. Don't put them inside the application folder</td></tr>
+    </tbody>
+  </table>
+  <p>EmbedOne never changes the system-wide PATH or installs into Program Files. Deleting its folder removes everything it downloaded.</p>
+  <div class="tip"><b>Keep the dependency folder's path short</b>Windows limits most file paths to 260 characters, and compilers build long paths of their own inside it. If you move the dependency folder, choose something short such as <code>D:\EmbedOne</code>.</div>
+
+  <h3>Settings</h3>
+  <table>
+    <thead><tr><th class="k">Setting</th><th>What it changes</th></tr></thead>
+    <tbody>
+      <tr><td class="k"><code>embedone.home</code></td><td>Where dependencies are installed. Empty uses the default</td></tr>
+      <tr><td class="k"><code>embedone.cliPath</code></td><td>Use a different <code>embedone</code> program. Empty uses the bundled one</td></tr>
+      <tr><td class="k"><code>embedone.monitor.localEcho</code></td><td>Show your typing in the serial console</td></tr>
+      <tr><td class="k"><code>embedone.devices.refreshSeconds</code></td><td>How often the Devices list checks for boards</td></tr>
+      <tr><td class="k"><code>embedone.distributionWelcome</code></td><td>Open Workspace Home at startup</td></tr>
+      <tr><td class="k"><code>embedone.studioShell</code></td><td>Use the compact EmbedOne layout. Turn off for the classic editor layout</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- 12 -->
+<section class="chapter" id="trouble">
+  <h2><span class="n">12</span>Troubleshooting</h2>
+  <p>Start with <b>Check setup</b>. Doctor checks each requirement separately and gives a specific fix for anything that isn't ready.</p>
+  <table>
+    <thead><tr><th style="width:31%">You see</th><th style="width:27%">Why</th><th>What to do</th></tr></thead>
+    <tbody>
+      <tr class="group"><td colspan="3">Installing and starting</td></tr>
+      <tr><td>"Windows protected your PC"</td><td>The installer isn't code-signed yet</td><td>Check the SHA-256, then <b>More info → Run anyway</b></td></tr>
+      <tr><td>A firewall prompt naming VSCodium</td><td>The editor base EmbedOne is built on</td><td>Choose <b>Cancel</b>; nothing needs incoming access</td></tr>
+      <tr><td><code>embedone</code> isn't recognised in a terminal</td><td>The terminal was open before you installed</td><td>Open a new terminal window</td></tr>
+      <tr class="group"><td colspan="3">STM32 boards</td></tr>
+      <tr><td>Build works but Flash and Debug are disabled</td><td>STM32CubeCLT wasn't found</td><td>Install it (chapter 4), restart EmbedOne; set <code>EMBEDONE_CUBECLT_ROOT</code> if it isn't in <code>C:\ST</code></td></tr>
+      <tr><td>Devices says "No board detected"</td><td>The board is still starting up, the cable is charge-only, or the ST-LINK driver is missing</td><td>Wait a few seconds and refresh; use a data cable; install ST's driver</td></tr>
+      <tr><td>Flash refuses: device ID mismatch</td><td>A different chip is connected from the one the project targets</td><td>Connect the right board, or create a project for the one you have. Nothing was written</td></tr>
+      <tr><td>No flash/RAM figures after a build</td><td>Known issue when the compiler comes from STM32CubeCLT</td><td>The build itself is fine. A later release will fix this</td></tr>
+      <tr><td>A header "doesn't exist" but it's there</td><td>The path is longer than Windows allows</td><td>Move the dependency folder somewhere shorter (chapter 11)</td></tr>
+      <tr class="group"><td colspan="3">Serial console</td></tr>
+      <tr><td>Random characters at the start</td><td>Output buffered before the speed was set</td><td>Close and reopen the console</td></tr>
+      <tr><td>Garbled text the whole time</td><td>The speed doesn't match your firmware</td><td>Use <code>--baud</code> with your firmware's speed</td></tr>
+      <tr><td>"Port is busy"</td><td>Another program has the port open</td><td>Close other serial tools and the other console</td></tr>
+      <tr class="group"><td colspan="3">Linux boards</td></tr>
+      <tr><td>"Host key verification failed"</td><td>You haven't connected to this board before</td><td>Run <code>ssh user@host</code> once, check the fingerprint, accept it</td></tr>
+      <tr><td>"Permission denied (publickey)"</td><td>Key login isn't set up</td><td>Add your public key on the board; set <code>identity_file</code> if needed</td></tr>
+      <tr><td>Doctor says the board's CMake, Ninja or compiler is missing</td><td>Build tools aren't installed on the board</td><td>Install them (chapter 6)</td></tr>
+      <tr><td>"Target model mismatch"</td><td>The project is for a different board model</td><td>Point the project at the right board, or create a project for this one</td></tr>
+      <tr class="group"><td colspan="3">Raspberry Pi Pico</td></tr>
+      <tr><td>Flash can't find the Pico</td><td>It isn't in BOOTSEL mode</td><td>Hold BOOTSEL while plugging in USB</td></tr>
+      <tr><td>Flash asks which drive</td><td>More than one Pico drive is connected</td><td><code>embedone flash --port "E:\"</code> with the right drive letter</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- 13 -->
+<section class="chapter" id="uninstall">
+  <h2><span class="n">13</span>Updating and uninstalling</h2>
+  <h3>Updating</h3>
+  <p>EmbedOne doesn't update itself, so the version you installed keeps working exactly as tested. New releases appear on the EmbedOne website and at <a href="https://github.com/EmbedOne/embedone-web/releases">github.com/EmbedOne/embedone-web/releases</a>. Run the new installer over the existing one; your projects and settings are kept.</p>
+  <h3>Uninstalling</h3>
+  <p>Open Windows <b>Settings → Apps</b>, find <b>EmbedOne</b> and choose <b>Uninstall</b>. This removes the application, its shortcuts, and the PATH entry the installer added.</p>
+  <p>To be safe, it leaves two things behind: your projects, and the downloaded compilers and SDKs in <code>%LOCALAPPDATA%\EmbedOne</code>. Delete that folder yourself if you want the disk space back. STM32CubeCLT is uninstalled separately, through ST's own uninstaller.</p>
+</section>
+
+<!-- 14 -->
+<section class="chapter" id="limits">
+  <h2><span class="n">14</span>Known limitations in 1.0.0</h2>
+  <ul>
+    <li><b>Hardware testing.</b> The NUCLEO-G071RB has been tested end to end on real hardware: build, verified flash, serial console and debugging. The other boards have been checked in software and against their vendors' own files, but not yet on physical hardware.</li>
+    <li><b>Debugging</b> is available for the three STM32 boards only.</li>
+    <li><b>Linux boards</b> run applications; EmbedOne doesn't build or flash operating-system images, and doesn't debug Linux programs yet.</li>
+    <li><b>Pico flashing</b> can't be read back, so it isn't marked as verified.</li>
+    <li><b>STM32CubeCLT</b> has to be installed by hand, because ST requires an account.</li>
+    <li><b>Branding.</b> The installer isn't code-signed, and some Windows dialogs and file properties still say VSCodium.</li>
+    <li><b>Two known issues:</b> flash and RAM figures don't appear when the compiler comes from STM32CubeCLT, and the first serial session after plugging in a Nucleo can start with garbage (chapter 7).</li>
+    <li><b>Windows only.</b> A Linux version is coming.</li>
+  </ul>
+</section>
+
+<!-- A -->
+<section class="chapter" id="boards">
+  <h2><span class="n">A</span>Supported boards</h2>
+  <p>Use the board ID with <code>embedone new</code> or in <code>embedone.json</code>.</p>
+  <table>
+    <thead><tr><th class="k">Board ID</th><th>Board</th><th>Chip</th><th>Works with</th></tr></thead>
+    <tbody>
+      <tr class="group"><td colspan="4">STM32 · type <code>stm32</code></td></tr>
+      <tr><td class="k"><code>nucleo-c5a3zg</code></td><td>NUCLEO-C5A3ZG</td><td>STM32C5A3ZG</td><td>Build, flash, monitor, debug</td></tr>
+      <tr><td class="k"><code>nucleo-f401re</code></td><td>NUCLEO-F401RE</td><td>STM32F401RE</td><td>Build, flash, monitor, debug</td></tr>
+      <tr><td class="k"><code>nucleo-g071rb</code></td><td>NUCLEO-G071RB</td><td>STM32G071RB</td><td>Build, flash, monitor, debug</td></tr>
+      <tr class="group"><td colspan="4">Arduino · type <code>arduino</code></td></tr>
+      <tr><td class="k"><code>esp32-devkit</code></td><td>ESP32 Dev Module</td><td>ESP32</td><td>Build, flash, monitor</td></tr>
+      <tr><td class="k"><code>rpi-pico</code></td><td>Raspberry Pi Pico</td><td>RP2040</td><td>Build, flash, monitor</td></tr>
+      <tr><td class="k"><code>rpi-pico-w</code></td><td>Raspberry Pi Pico W</td><td>RP2040</td><td>Build, flash, monitor</td></tr>
+      <tr><td class="k"><code>rpi-pico-2</code></td><td>Raspberry Pi Pico 2</td><td>RP2350</td><td>Build, flash, monitor</td></tr>
+      <tr><td class="k"><code>rpi-pico-2-w</code></td><td>Raspberry Pi Pico 2 W</td><td>RP2350</td><td>Build, flash, monitor</td></tr>
+      <tr class="group"><td colspan="4">Raspberry Pi Linux · type <code>linux-app</code></td></tr>
+      <tr><td class="k"><code>rpi-5</code></td><td>Raspberry Pi 5</td><td>BCM2712</td><td>Build, deploy, run</td></tr>
+      <tr><td class="k"><code>rpi-cm5</code></td><td>Raspberry Pi Compute Module 5</td><td>BCM2712</td><td>Build, deploy, run</td></tr>
+      <tr><td class="k"><code>rpi-4</code></td><td>Raspberry Pi 4 Model B</td><td>BCM2711</td><td>Build, deploy, run</td></tr>
+      <tr><td class="k"><code>rpi-400</code></td><td>Raspberry Pi 400</td><td>BCM2711</td><td>Build, deploy, run</td></tr>
+      <tr><td class="k"><code>rpi-cm4</code></td><td>Raspberry Pi Compute Module 4</td><td>BCM2711</td><td>Build, deploy, run</td></tr>
+      <tr><td class="k"><code>rpi-3b-plus</code></td><td>Raspberry Pi 3 Model B+</td><td>BCM2837B0</td><td>Build, deploy, run</td></tr>
+      <tr><td class="k"><code>rpi-3b</code></td><td>Raspberry Pi 3 Model B</td><td>BCM2837</td><td>Build, deploy, run</td></tr>
+      <tr><td class="k"><code>rpi-zero-2-w</code></td><td>Raspberry Pi Zero 2 W</td><td>BCM2710A1</td><td>Build, deploy, run</td></tr>
+      <tr><td class="k"><code>rpi-zero-w</code></td><td>Raspberry Pi Zero W</td><td>BCM2835</td><td>Build, deploy, run</td></tr>
+      <tr><td class="k"><code>rpi-zero</code></td><td>Raspberry Pi Zero</td><td>BCM2835</td><td>Build, deploy, run</td></tr>
+      <tr class="group"><td colspan="4">NXP i.MX Linux · type <code>linux-app</code></td></tr>
+      <tr><td class="k"><code>imx6q-sabresd</code></td><td>i.MX 6Quad SABRE SD</td><td>i.MX 6Quad</td><td>Build, deploy, run</td></tr>
+      <tr><td class="k"><code>imx6ul-14x14-evk</code></td><td>i.MX 6UltraLite 14x14 EVK</td><td>i.MX 6UltraLite</td><td>Build, deploy, run</td></tr>
+      <tr><td class="k"><code>imx6ull-14x14-evk</code></td><td>i.MX 6ULL 14x14 EVK</td><td>i.MX 6ULL</td><td>Build, deploy, run</td></tr>
+      <tr><td class="k"><code>imx7d-sdb</code></td><td>i.MX 7Dual SABRE SD</td><td>i.MX 7Dual</td><td>Build, deploy, run</td></tr>
+      <tr><td class="k"><code>imx7ulp-evk</code></td><td>i.MX 7ULP EVK</td><td>i.MX 7ULP</td><td>Build, deploy, run</td></tr>
+      <tr><td class="k"><code>imx8mm-evk</code></td><td>i.MX 8M Mini EVK</td><td>i.MX 8M Mini</td><td>Build, deploy, run</td></tr>
+      <tr><td class="k"><code>imx8mn-evk</code></td><td>i.MX 8M Nano EVK</td><td>i.MX 8M Nano</td><td>Build, deploy, run</td></tr>
+      <tr><td class="k"><code>imx8mp-evk</code></td><td>i.MX 8M Plus EVK</td><td>i.MX 8M Plus</td><td>Build, deploy, run</td></tr>
+      <tr><td class="k"><code>imx8mq-evk</code></td><td>i.MX 8M Quad EVK</td><td>i.MX 8M Quad</td><td>Build, deploy, run</td></tr>
+      <tr><td class="k"><code>imx8qm-mek</code></td><td>i.MX 8QuadMax MEK</td><td>i.MX 8QuadMax</td><td>Build, deploy, run</td></tr>
+      <tr><td class="k"><code>imx8qxp-mek</code></td><td>i.MX 8QuadXPlus MEK</td><td>i.MX 8QuadXPlus</td><td>Build, deploy, run</td></tr>
+      <tr><td class="k"><code>imx8ulp-evk</code></td><td>i.MX 8ULP EVK</td><td>i.MX 8ULP</td><td>Build, deploy, run</td></tr>
+      <tr><td class="k"><code>imx91-11x11-evk</code></td><td>i.MX 91 11x11 EVK</td><td>i.MX 91</td><td>Build, deploy, run</td></tr>
+      <tr><td class="k"><code>imx93-11x11-evk</code></td><td>i.MX 93 11x11 EVK</td><td>i.MX 93</td><td>Build, deploy, run</td></tr>
+      <tr><td class="k"><code>imx95-19x19-evk</code></td><td>i.MX 95 19x19 EVK</td><td>i.MX 95</td><td>Build, deploy, run</td></tr>
+    </tbody>
+  </table>
+</section>
+
+</body>
+</html>
