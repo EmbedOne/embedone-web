@@ -45,6 +45,41 @@ button { border: 0; color: inherit; cursor: pointer; background: none; }
 a { text-decoration: none; }
 
 /* =========================================================================
+   Buttons: one system for every call to action
+   ========================================================================= */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  height: 36px; padding: 0 16px; border: 1px solid transparent; border-radius: 4px;
+  font: 600 13px/1 Inter, system-ui, -apple-system, sans-serif; letter-spacing: 0.005em;
+  white-space: nowrap; cursor: pointer; user-select: none;
+  transition: background-color .12s ease, border-color .12s ease, color .12s ease;
+}
+.btn svg { flex-shrink: 0; }
+.btn:focus-visible { outline: 2px solid #9fdbea; outline-offset: 2px; }
+.btn-primary {
+  background: #007acc; border-color: #1c8ad6; color: #ffffff;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+.btn-primary:hover { background: #1288d8; border-color: #3a9ee3; }
+.btn-primary:active { background: #006ab3; }
+.btn-secondary { background: #2f2f33; border-color: #48484e; color: #e6e6e6; }
+.btn-secondary:hover { background: #3a3a40; border-color: #5c5c64; color: #ffffff; }
+.btn-secondary:active { background: #2a2a2e; }
+.btn-soon {
+  background: transparent; border: 1px dashed #4c4c53; color: #a3a3a3;
+  cursor: default; gap: 10px;
+}
+.soon-chip {
+  padding: 4px 7px; border-radius: 999px; background: rgba(78, 201, 176, 0.13); color: #4ec9b0;
+  font: 600 10px/1 Inter, system-ui, sans-serif; letter-spacing: 0.06em; text-transform: uppercase;
+}
+.btn-sm { height: 28px; padding: 0 11px; gap: 6px; font-size: 12px; }
+.btn-sm .soon-chip { padding: 3px 6px; font-size: 9px; }
+.btn-lg { height: 42px; padding: 0 20px; font-size: 14px; }
+.btn-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+
+
+/* =========================================================================
    App Shell — Desktop Layout
    ========================================================================= */
 .vs-app {
@@ -465,11 +500,11 @@ a { text-decoration: none; }
 .lead { font-size: 16px; line-height: 1.7; color: #aaaaaa; max-width: 650px; }
 .hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
 
-.start-links { display: flex; flex-wrap: wrap; gap: 8px; margin: 25px 0 30px; }
-.start-links button:not(:first-child), .final-cta > button:not(:first-child) {
-  display: inline-flex; align-items: center; gap: 7px;
-  border: 1px solid #444444; background: #2a2a2a; padding: 9px 14px;
-}
+/* Hero: downloads on the first row, navigation on the second */
+.start-links { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; margin: 25px 0 30px; }
+.cta-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.cta-actions .btn-row { display: contents; }
+.titlebar-download .btn-row { gap: 6px; }
 
 .section h2 { font-size: clamp(22px, 3vw, 38px); letter-spacing: -0.03em; margin: 8px 0 24px; color: #eeeeee; }
 .section h3 { font-size: 12px; color: #eeeeee; margin: 22px 0 9px; }
@@ -660,9 +695,8 @@ a { text-decoration: none; }
 .handbook > div { flex: 1; min-width: 200px; }
 .handbook b { color: #eeeeee; }
 .handbook p { margin: 4px 0 0; color: #aaaaaa; font-size: 12px; line-height: 1.5; }
-.handbook-link { display: inline-flex; align-items: center; gap: 8px; flex-shrink: 0; background: #007acc; border: 1px solid #1995d1; color: #ffffff; padding: 8px 14px; font-size: 12px; font-weight: 600; white-space: nowrap; }
-.handbook-link:hover { background: #168bd0; }
-.handbook-link:focus-visible, .handbook-line a:focus-visible { outline: 2px solid #9fdbea; outline-offset: 2px; }
+.handbook .btn { flex-shrink: 0; }
+.handbook-line a:focus-visible { outline: 2px solid #9fdbea; outline-offset: 2px; }
 .handbook-line { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 14px 0 0; color: #999999; font-size: 12px; }
 .handbook-line svg { color: #9fdbea; }
 .handbook-line a { color: #3fa9e8; text-decoration: underline; text-underline-offset: 3px; }
@@ -678,9 +712,7 @@ a { text-decoration: none; }
 .notify form { display: flex; flex-shrink: 0; }
 .notify input { background: #1e1e1e; border: 1px solid #555555; padding: 8px 10px; color: #eeeeee; flex: 1; }
 .notify button { background: #007acc; padding: 8px 12px; color: #fff; white-space: nowrap; }
-.notify a.notify-link { flex-shrink: 0; background: #007acc; padding: 8px 12px; color: #fff; white-space: nowrap; font-size: 12px; font-weight: 600; }
-.notify a.notify-link:hover { background: #168bd0; }
-.notify a.notify-link:focus-visible { outline: 2px solid #9fdbea; outline-offset: 2px; }
+.notify .btn { flex-shrink: 0; }
 
 .final-cta { margin-top: 25px; border: 1px solid #23617a; background: #12313c; padding: 28px; }
 .final-cta h2 { margin: 0 0 7px; }
@@ -892,15 +924,9 @@ a { text-decoration: none; }
     margin: 20px 0 24px;
   }
 
-  /* Full-width CTA buttons on mobile */
-  .start-links > *, .start-links a, .start-links button,
-  .start-links span {
-    width: 100% !important;
-    justify-content: center !important;
-    text-align: center !important;
-    padding: 12px 16px !important;
-    font-size: 13px !important;
-  }
+  /* Full-width call-to-action buttons on mobile */
+  .start-links, .start-links .btn-row { align-items: stretch; width: 100%; }
+  .start-links .btn, .cta-actions .btn { flex: 1 1 100%; }
 
   .section { padding: 30px 0 60px; }
   .callout { margin-top: 14px; font-size: 12px; }
@@ -931,14 +957,14 @@ a { text-decoration: none; }
   .guide-intro { grid-template-columns: 1fr; gap: 18px; }
   .guide-steps, .guide-cards { grid-template-columns: 1fr; }
   .handbook { flex-direction: column; align-items: stretch; padding: 14px; gap: 12px; }
-  .handbook-link { justify-content: center; padding: 12px; font-size: 14px; }
+  .handbook .btn { width: 100%; }
 
   /* ---- Notify form ---- */
   .notify { flex-direction: column; align-items: stretch; padding: 14px; gap: 12px; }
   .notify form { flex-direction: column; gap: 8px; }
   .notify input { width: 100%; padding: 12px; font-size: 14px; }
   .notify button { width: 100%; padding: 12px; font-size: 14px; text-align: center; }
-  .notify a.notify-link { width: 100%; padding: 12px; font-size: 14px; text-align: center; }
+  .notify .btn { width: 100%; }
 
   /* ---- Final CTA ---- */
   .final-cta { padding: 20px 16px; }
