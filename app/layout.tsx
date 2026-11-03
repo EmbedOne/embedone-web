@@ -84,6 +84,9 @@ export const metadata: Metadata = {
   },
   manifest: '/manifest.webmanifest',
   category: 'technology',
+  verification: {
+    google: "AwLUhvB1dTYRXXaaFKOA2MyCWEfaR4jhHyUlm3L8uCc",
+  },
 }
 
 const jsonLd = {
