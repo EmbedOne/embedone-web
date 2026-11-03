@@ -3,7 +3,7 @@ export const SITE_CONFIG = {
   shortName: 'EmbedOne',
   description:
     'A unified, vendor-neutral IDE for MCU and MPU firmware development. Build, flash, debug with GDB, and monitor serial output across STM32, NXP, ESP32, and Raspberry Pi from one environment.',
-  url: process.env.NEXT_PUBLIC_SITE_URL || 'https://embedone.dev',
+  url: process.env.NEXT_PUBLIC_SITE_URL || 'https://embedone.vercel.app',
   ogImage: '/og-image.png',
   keywords: [
     'EmbedOne',
@@ -30,7 +30,7 @@ export const SITE_CONFIG = {
   authors: [
     {
       name: 'EmbedOne Team',
-      url: 'https://embedone.dev',
+      url: 'https://embedone.vercel.app',
     },
   ],
   creator: 'EmbedOne Team',

@@ -32,7 +32,7 @@ export default function Image() {
             <div style={{ width: 14, height: 14, borderRadius: '50%', background: '#ffbd2e' }} />
             <div style={{ width: 14, height: 14, borderRadius: '50%', background: '#27c93f' }} />
             <span style={{ marginLeft: '16px', color: '#888888', fontSize: '20px', letterSpacing: '1px' }}>
-              embedone.dev
+              embedone.vercel.app
             </span>
           </div>
           <div
